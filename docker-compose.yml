@@ -47,11 +47,11 @@ services:
       # Authentication
       JWT_SECRET: ${JWT_SECRET:-change-this-to-a-secure-random-string-at-least-32-chars}
       
-      # Payment Gateway
-      DEFAULT_PAYMENT_GATEWAY: ${DEFAULT_PAYMENT_GATEWAY:-greenpag}
-      GREENPAG_API_URL: ${GREENPAG_API_URL:-https://greenpag.com/api/v1}
-      GREENPAG_PUBLIC_KEY: ${GREENPAG_PUBLIC_KEY:-}
-      GREENPAG_SECRET_KEY: ${GREENPAG_SECRET_KEY:-}
+      # Payment Gateway (configure in Admin → Integrations)
+      DEFAULT_PAYMENT_GATEWAY: ${DEFAULT_PAYMENT_GATEWAY:-}
+      # Add your payment gateway credentials as needed
+      # STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY:-}
+      # STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       
       # Site Configuration
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}

@@ -70,7 +70,7 @@ export default function AdminSettingsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -100,7 +100,7 @@ export default function AdminSettingsPage() {
           <Button
             onClick={saveSettings}
             disabled={!hasChanges || isSaving}
-            className="bg-emerald-600 hover:bg-emerald-700"
+            className="bg-primary hover:bg-primary/90"
           >
             {isSaving ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -115,19 +115,19 @@ export default function AdminSettingsPage() {
       {/* Settings Tabs */}
       <Tabs defaultValue="general" className="space-y-6">
         <TabsList className="bg-zinc-800 border border-zinc-700">
-          <TabsTrigger value="general" className="data-[state=active]:bg-emerald-600">
+          <TabsTrigger value="general" className="data-[state=active]:bg-primary">
             <Store className="h-4 w-4 mr-2" />
             General
           </TabsTrigger>
-          <TabsTrigger value="branding" className="data-[state=active]:bg-emerald-600">
+          <TabsTrigger value="branding" className="data-[state=active]:bg-primary">
             <Image className="h-4 w-4 mr-2" />
             Branding
           </TabsTrigger>
-          <TabsTrigger value="theme" className="data-[state=active]:bg-emerald-600">
+          <TabsTrigger value="theme" className="data-[state=active]:bg-primary">
             <Palette className="h-4 w-4 mr-2" />
             Theme
           </TabsTrigger>
-          <TabsTrigger value="payment" className="data-[state=active]:bg-emerald-600">
+          <TabsTrigger value="payment" className="data-[state=active]:bg-primary">
             <CreditCard className="h-4 w-4 mr-2" />
             Payment
           </TabsTrigger>
@@ -381,7 +381,7 @@ export default function AdminSettingsPage() {
                 <div className="space-y-2">
                   <Label className="text-zinc-300">Default Gateway</Label>
                   <Input
-                    value={settings.defaultPaymentGateway || 'greenpag'}
+                    value={settings.defaultPaymentGateway || ''}
                     onChange={(e) => updateSettings({ defaultPaymentGateway: e.target.value })}
                     className="bg-zinc-800 border-zinc-700 text-white"
                   />

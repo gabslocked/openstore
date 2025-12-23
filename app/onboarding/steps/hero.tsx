@@ -17,8 +17,8 @@ export function HeroStep({ settings, updateSettings }: HeroStepProps) {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-emerald-500/20 mb-4">
-          <Image className="h-6 w-6 text-emerald-400" />
+        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-primary/20 mb-4">
+          <Image className="h-6 w-6 text-primary" />
         </div>
         <h2 className="text-xl font-semibold text-white mb-2">Homepage Hero</h2>
         <p className="text-zinc-400">Configure your homepage banner or video</p>
@@ -37,7 +37,7 @@ export function HeroStep({ settings, updateSettings }: HeroStepProps) {
             className={`
               flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all
               ${settings.heroType === 'none' || !settings.heroType
-                ? 'border-emerald-500 bg-emerald-500/10' 
+                ? 'border-primary bg-primary/10' 
                 : 'border-zinc-700 hover:border-zinc-500'
               }
             `}
@@ -52,7 +52,7 @@ export function HeroStep({ settings, updateSettings }: HeroStepProps) {
             className={`
               flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all
               ${settings.heroType === 'image' 
-                ? 'border-emerald-500 bg-emerald-500/10' 
+                ? 'border-primary bg-primary/10' 
                 : 'border-zinc-700 hover:border-zinc-500'
               }
             `}
@@ -67,7 +67,7 @@ export function HeroStep({ settings, updateSettings }: HeroStepProps) {
             className={`
               flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all
               ${settings.heroType === 'video' 
-                ? 'border-emerald-500 bg-emerald-500/10' 
+                ? 'border-primary bg-primary/10' 
                 : 'border-zinc-700 hover:border-zinc-500'
               }
             `}

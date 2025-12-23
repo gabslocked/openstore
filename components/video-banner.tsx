@@ -87,7 +87,7 @@ export default function VideoBanner() {
               className="h-16 sm:h-20 md:h-24 w-auto mb-4 drop-shadow-lg"
             />
           ) : (
-            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mb-4 shadow-xl">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl bg-primary flex items-center justify-center mb-4 shadow-xl">
               <Store className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
             </div>
           )}

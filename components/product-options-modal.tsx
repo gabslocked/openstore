@@ -182,7 +182,7 @@ export default function ProductOptionsModal({
               {formatPrice(pricing.totalPrice)}
             </p>
             {pricing.hasDiscount && (
-              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+              <Badge className="bg-primary/20 text-primary border-primary/30">
                 Economize {formatPrice(pricing.savings)}
               </Badge>
             )}
@@ -223,7 +223,7 @@ export default function ProductOptionsModal({
                         ${isDisabled 
                           ? 'opacity-50 cursor-not-allowed border-zinc-800 bg-zinc-900' 
                           : isSelected
-                            ? 'border-emerald-500/50 bg-emerald-500/10'
+                            ? 'border-primary/50 bg-primary/10'
                             : 'border-zinc-700 bg-zinc-800/50 hover:bg-zinc-800 hover:border-zinc-600'
                         }
                       `}
@@ -232,7 +232,7 @@ export default function ProductOptionsModal({
                       <div className={`
                         w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
                         ${isSelected 
-                          ? 'border-emerald-500 bg-emerald-500' 
+                          ? 'border-primary bg-primary' 
                           : 'border-zinc-600'
                         }
                       `}>
@@ -261,7 +261,7 @@ export default function ProductOptionsModal({
                       
                       {/* Price */}
                       {option.price > 0 && (
-                        <span className="text-sm text-emerald-400 flex-shrink-0">
+                        <span className="text-sm text-primary flex-shrink-0">
                           +{formatPrice(option.price)}
                         </span>
                       )}
@@ -334,7 +334,7 @@ export default function ProductOptionsModal({
                 ${isOutOfStock
                   ? 'bg-red-600 hover:bg-red-700 cursor-not-allowed'
                   : canAddToCart
-                    ? 'bg-emerald-600 hover:bg-emerald-700'
+                    ? 'bg-primary hover:bg-primary/90'
                     : 'bg-zinc-700 cursor-not-allowed'
                 }
               `}

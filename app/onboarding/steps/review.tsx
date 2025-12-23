@@ -39,7 +39,7 @@ export function ReviewStep({ settings }: ReviewStepProps) {
       icon: CreditCard,
       title: 'Payment',
       items: [
-        { label: 'Gateway', value: settings.defaultPaymentGateway || 'greenpag' },
+        { label: 'Gateway', value: settings.defaultPaymentGateway || 'Not configured' },
         { label: 'Currency', value: `${settings.currencySymbol || 'R$'} (${settings.currency || 'BRL'})` },
       ],
     },
@@ -48,8 +48,8 @@ export function ReviewStep({ settings }: ReviewStepProps) {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-emerald-500/20 mb-4">
-          <Rocket className="h-6 w-6 text-emerald-400" />
+        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-primary/20 mb-4">
+          <Rocket className="h-6 w-6 text-primary" />
         </div>
         <h2 className="text-xl font-semibold text-white mb-2">Ready to Launch!</h2>
         <p className="text-zinc-400">Review your settings before going live</p>
@@ -63,7 +63,7 @@ export function ReviewStep({ settings }: ReviewStepProps) {
             className="p-4 rounded-xl bg-zinc-800/50 border border-zinc-700"
           >
             <div className="flex items-center gap-2 mb-3">
-              <section.icon className="h-4 w-4 text-emerald-400" />
+              <section.icon className="h-4 w-4 text-primary" />
               <h3 className="font-medium text-white">{section.title}</h3>
             </div>
             <div className="space-y-2">
@@ -121,19 +121,19 @@ export function ReviewStep({ settings }: ReviewStepProps) {
       )}
 
       {/* Checklist */}
-      <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
-        <h4 className="font-medium text-emerald-400 mb-3">Before you launch</h4>
+      <div className="p-4 rounded-xl bg-primary/10 border border-primary/30">
+        <h4 className="font-medium text-primary mb-3">Before you launch</h4>
         <ul className="space-y-2">
           <li className="flex items-center gap-2 text-sm text-zinc-300">
-            <Check className="h-4 w-4 text-emerald-400" />
+            <Check className="h-4 w-4 text-primary" />
             Add your payment gateway API keys to environment variables
           </li>
           <li className="flex items-center gap-2 text-sm text-zinc-300">
-            <Check className="h-4 w-4 text-emerald-400" />
+            <Check className="h-4 w-4 text-primary" />
             Add products to your catalog
           </li>
           <li className="flex items-center gap-2 text-sm text-zinc-300">
-            <Check className="h-4 w-4 text-emerald-400" />
+            <Check className="h-4 w-4 text-primary" />
             Test the checkout flow
           </li>
         </ul>
@@ -142,7 +142,7 @@ export function ReviewStep({ settings }: ReviewStepProps) {
       {/* Launch Message */}
       <div className="text-center py-4">
         <p className="text-zinc-400">
-          Click <span className="text-emerald-400 font-medium">Launch Store</span> to complete setup and go to your admin dashboard.
+          Click <span className="text-primary font-medium">Launch Store</span> to complete setup and go to your admin dashboard.
         </p>
       </div>
     </div>

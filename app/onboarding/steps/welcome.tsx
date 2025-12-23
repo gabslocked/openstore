@@ -23,7 +23,7 @@ export function WelcomeStep({ onContinue }: WelcomeStepProps) {
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", duration: 0.5 }}
-        className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 mb-6"
+        className="inline-flex items-center justify-center h-20 w-20 rounded-2xl mb-6 bg-primary"
       >
         <Sparkles className="h-10 w-10 text-white" />
       </motion.div>
@@ -60,7 +60,7 @@ export function WelcomeStep({ onContinue }: WelcomeStepProps) {
             transition={{ delay: 0.5 + index * 0.1 }}
             className="p-4 rounded-xl bg-zinc-800/50 border border-zinc-700/50"
           >
-            <feature.icon className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
+            <feature.icon className="h-6 w-6 text-primary mx-auto mb-2" />
             <h3 className="text-sm font-medium text-white mb-1">{feature.title}</h3>
             <p className="text-xs text-zinc-500">{feature.description}</p>
           </motion.div>
@@ -75,7 +75,7 @@ export function WelcomeStep({ onContinue }: WelcomeStepProps) {
         <Button
           size="lg"
           onClick={onContinue}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white px-8"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground px-8"
         >
           <Rocket className="h-5 w-5 mr-2" />
           Get Started

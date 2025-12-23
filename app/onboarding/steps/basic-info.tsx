@@ -16,8 +16,8 @@ export function BasicInfoStep({ settings, updateSettings }: BasicInfoStepProps) 
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-emerald-500/20 mb-4">
-          <Store className="h-6 w-6 text-emerald-400" />
+        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-primary/20 mb-4">
+          <Store className="h-6 w-6 text-primary" />
         </div>
         <h2 className="text-xl font-semibold text-white mb-2">Store Information</h2>
         <p className="text-zinc-400">Tell us about your store</p>

@@ -131,8 +131,8 @@ export function PaymentStep({ settings, updateSettings }: PaymentStepProps) {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-emerald-500/20 mb-4">
-          <CreditCard className="h-6 w-6 text-emerald-400" />
+        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-primary/20 mb-4">
+          <CreditCard className="h-6 w-6 text-primary" />
         </div>
         <h2 className="text-xl font-semibold text-white mb-2">Payment Setup</h2>
         <p className="text-zinc-400">Configure your payment gateway</p>
@@ -159,7 +159,7 @@ export function PaymentStep({ settings, updateSettings }: PaymentStepProps) {
                 className={`
                   flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all
                   ${isSelected
-                    ? 'border-emerald-500 bg-emerald-500/10' 
+                    ? 'border-primary bg-primary/10' 
                     : 'border-zinc-700 hover:border-zinc-500'
                   }
                 `}
@@ -169,7 +169,7 @@ export function PaymentStep({ settings, updateSettings }: PaymentStepProps) {
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-white">{gateway.name}</span>
                     {isConfigured && (
-                      <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                      <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">
                         Configured
                       </span>
                     )}
@@ -183,7 +183,7 @@ export function PaymentStep({ settings, updateSettings }: PaymentStepProps) {
                     ))}
                   </div>
                 </div>
-                {isSelected && <Check className="h-5 w-5 text-emerald-400" />}
+                {isSelected && <Check className="h-5 w-5 text-primary" />}
               </button>
             );
           })}
@@ -201,7 +201,7 @@ export function PaymentStep({ settings, updateSettings }: PaymentStepProps) {
                   href={gatewayInfo.docsUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-emerald-400 hover:underline text-sm font-normal inline-flex items-center gap-1"
+                  className="text-primary hover:underline text-sm font-normal inline-flex items-center gap-1"
                 >
                   Docs <ExternalLink className="h-3 w-3" />
                 </a>
@@ -252,7 +252,7 @@ export function PaymentStep({ settings, updateSettings }: PaymentStepProps) {
           {testResult && (
             <div className={`p-3 rounded-lg text-sm flex items-center gap-2 ${
               testResult.success 
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                ? 'bg-primary/10 text-primary border border-primary/30'
                 : 'bg-red-500/10 text-red-400 border border-red-500/30'
             }`}>
               {testResult.success ? (
@@ -284,7 +284,7 @@ export function PaymentStep({ settings, updateSettings }: PaymentStepProps) {
               type="button"
               onClick={saveCredentials}
               disabled={saving || Object.keys(credentials).length === 0}
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-primary hover:bg-primary/90"
             >
               {saving ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -358,7 +358,7 @@ export function PaymentStep({ settings, updateSettings }: PaymentStepProps) {
       <div className="p-4 rounded-xl bg-zinc-800/50 border border-zinc-700">
         <p className="text-sm text-zinc-400">
           💡 You can skip this step and configure payment gateways later in{' '}
-          <span className="text-emerald-400">Admin → Integrations</span>
+          <span className="text-primary">Admin → Integrations</span>
         </p>
       </div>
     </div>

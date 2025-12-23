@@ -133,7 +133,7 @@ export default function IntegrationsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -155,11 +155,11 @@ export default function IntegrationsPage() {
 
       <Tabs defaultValue="payments" className="space-y-6">
         <TabsList className="bg-zinc-800 border border-zinc-700">
-          <TabsTrigger value="payments" className="data-[state=active]:bg-emerald-600">
+          <TabsTrigger value="payments" className="data-[state=active]:bg-primary">
             <CreditCard className="h-4 w-4 mr-2" />
             Payment Gateways
           </TabsTrigger>
-          <TabsTrigger value="webhooks" className="data-[state=active]:bg-emerald-600">
+          <TabsTrigger value="webhooks" className="data-[state=active]:bg-primary">
             <Webhook className="h-4 w-4 mr-2" />
             Webhooks
           </TabsTrigger>
@@ -185,7 +185,7 @@ export default function IntegrationsPage() {
                 <Card 
                   key={integration.id} 
                   className={`bg-zinc-900 border-zinc-800 transition-all ${
-                    integration.enabled ? 'border-emerald-500/50' : ''
+                    integration.enabled ? 'border-primary/50' : ''
                   }`}
                 >
                   <CardHeader className="pb-4">
@@ -196,7 +196,7 @@ export default function IntegrationsPage() {
                           <CardTitle className="text-white flex items-center gap-2">
                             {integration.name}
                             {integration.isDefault && (
-                              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                              <Badge className="bg-primary/20 text-primary border-primary/30">
                                 Default
                               </Badge>
                             )}
@@ -213,7 +213,7 @@ export default function IntegrationsPage() {
                                 href={gatewayInfo.docsUrl} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="text-emerald-400 hover:underline inline-flex items-center gap-1"
+                                className="text-primary hover:underline inline-flex items-center gap-1"
                               >
                                 Docs <ExternalLink className="h-3 w-3" />
                               </a>
@@ -295,7 +295,7 @@ export default function IntegrationsPage() {
                     {integration.lastTestAt && (
                       <div className={`p-3 rounded-lg text-sm flex items-center gap-2 ${
                         integration.lastTestSuccess 
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                          ? 'bg-primary/10 text-primary border border-primary/30'
                           : 'bg-red-500/10 text-red-400 border border-red-500/30'
                       }`}>
                         {integration.lastTestSuccess ? (
@@ -342,7 +342,7 @@ export default function IntegrationsPage() {
                       <Button
                         onClick={() => saveIntegration(integration, integration.enabled)}
                         disabled={isCurrentlySaving || Object.keys(creds).length === 0}
-                        className="bg-emerald-600 hover:bg-emerald-700 ml-auto"
+                        className="bg-primary hover:bg-primary/90 ml-auto"
                       >
                         {isCurrentlySaving ? (
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />

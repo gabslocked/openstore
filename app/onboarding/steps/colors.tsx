@@ -26,8 +26,8 @@ export function ColorsStep({ settings, updateSettings }: ColorsStepProps) {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-emerald-500/20 mb-4">
-          <Palette className="h-6 w-6 text-emerald-400" />
+        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-primary/20 mb-4">
+          <Palette className="h-6 w-6 text-primary" />
         </div>
         <h2 className="text-xl font-semibold text-white mb-2">Colors & Theme</h2>
         <p className="text-zinc-400">Customize your store's look and feel</p>
@@ -160,7 +160,7 @@ export function ColorsStep({ settings, updateSettings }: ColorsStepProps) {
             className={`
               flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all
               ${settings.themeMode === 'light' 
-                ? 'border-emerald-500 bg-emerald-500/10' 
+                ? 'border-primary bg-primary/10' 
                 : 'border-zinc-700 hover:border-zinc-500'
               }
             `}
@@ -175,7 +175,7 @@ export function ColorsStep({ settings, updateSettings }: ColorsStepProps) {
             className={`
               flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all
               ${settings.themeMode === 'dark' || !settings.themeMode
-                ? 'border-emerald-500 bg-emerald-500/10' 
+                ? 'border-primary bg-primary/10' 
                 : 'border-zinc-700 hover:border-zinc-500'
               }
             `}
@@ -190,7 +190,7 @@ export function ColorsStep({ settings, updateSettings }: ColorsStepProps) {
             className={`
               flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all
               ${settings.themeMode === 'system' 
-                ? 'border-emerald-500 bg-emerald-500/10' 
+                ? 'border-primary bg-primary/10' 
                 : 'border-zinc-700 hover:border-zinc-500'
               }
             `}

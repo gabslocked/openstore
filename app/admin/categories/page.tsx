@@ -194,7 +194,7 @@ export default function AdminCategoriesPageNew() {
               <Button
                 onClick={handleCreate}
                 disabled={isCreating || !newCategory.name.trim()}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {isCreating ? "Criando..." : "Criar Categoria"}
               </Button>
@@ -213,7 +213,7 @@ export default function AdminCategoriesPageNew() {
             {!showCreateForm && (
               <Button
                 onClick={() => setShowCreateForm(true)}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 Criar Primeira Categoria
               </Button>
