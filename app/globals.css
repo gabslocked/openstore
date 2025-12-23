@@ -1,0 +1,368 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    /* Updated primary to silver/gray */
+    --primary: 0 0% 60%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Updated background to pure black */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    /* Updated card to dark gray */
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
+    /* Updated popover to dark gray */
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
+    /* Updated primary to silver */
+    --primary: 0 0% 70%;
+    --primary-foreground: 0 0% 9%;
+    /* Updated secondary to darker gray */
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+    /* Updated muted to dark gray */
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 63.9%;
+    /* Updated accent to dark gray */
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    /* Updated border to medium gray */
+    --border: 0 0% 25%;
+    /* Updated input to dark gray */
+    --input: 0 0% 15%;
+    --ring: 0 0% 83.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Custom animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    /* Updated shimmer to silver/gray */
+    rgba(156, 163, 175, 0) 0%,
+    rgba(156, 163, 175, 0.2) 25%,
+    rgba(156, 163, 175, 0.2) 50%,
+    rgba(156, 163, 175, 0) 75%,
+    rgba(156, 163, 175, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Added glassmorphism effects and radial gradients */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glassmorphism-dark {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glassmorphism-silver {
+  background: linear-gradient(135deg, rgba(156, 163, 175, 0.1) 0%, rgba(107, 114, 128, 0.05) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(156, 163, 175, 0.2);
+}
+
+@keyframes float-silver {
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+.animate-float-silver {
+  animation: float-silver 6s ease-in-out infinite;
+}
+
+/* Glow effects */
+.text-glow {
+  /* Updated glow to silver */
+  text-shadow: 0 0 10px rgba(156, 163, 175, 0.5);
+}
+
+.box-glow {
+  /* Updated box glow to silver */
+  box-shadow: 0 0 15px rgba(156, 163, 175, 0.3);
+}
+
+.box-glow-strong {
+  box-shadow: 0 0 25px rgba(156, 163, 175, 0.4), 0 0 50px rgba(156, 163, 175, 0.2);
+}
+
+/* Loading animation */
+.loading-dots {
+  display: inline-flex;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  margin: 0 4px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  animation: loading-dots 1.4s infinite ease-in-out both;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes loading-dots {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  /* Updated scrollbar track to black */
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  /* Updated scrollbar thumb to dark gray */
+  background: #374151;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  /* Updated scrollbar hover to silver */
+  background: #9ca3af;
+}
+
+/* Adding more prominent animated silver light spots */
+@keyframes silver-spot-1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translate(100px, -50px) scale(1.2);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-50px, 100px) scale(0.8);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(150px, 50px) scale(1.1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.4;
+  }
+}
+
+@keyframes silver-spot-2 {
+  0% {
+    transform: translate(0, 0) scale(0.8);
+    opacity: 0.3;
+  }
+  33% {
+    transform: translate(-80px, 120px) scale(1.3);
+    opacity: 0.6;
+  }
+  66% {
+    transform: translate(120px, -80px) scale(0.9);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(0, 0) scale(0.8);
+    opacity: 0.3;
+  }
+}
+
+@keyframes silver-spot-3 {
+  0% {
+    transform: translate(0, 0) scale(1.1);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translate(200px, 100px) scale(0.7);
+    opacity: 0.3;
+  }
+  80% {
+    transform: translate(-100px, -150px) scale(1.4);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(0, 0) scale(1.1);
+    opacity: 0.5;
+  }
+}
+
+.silver-spots-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.silver-spot {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  background: radial-gradient(
+    circle,
+    rgba(192, 192, 192, 0.6) 0%,
+    rgba(156, 163, 175, 0.4) 50%,
+    rgba(107, 114, 128, 0.2) 100%
+  );
+}
+
+.silver-spot-1 {
+  width: 300px;
+  height: 300px;
+  top: 20%;
+  left: 10%;
+  animation: silver-spot-1 12s ease-in-out infinite;
+}
+
+.silver-spot-2 {
+  width: 250px;
+  height: 250px;
+  top: 60%;
+  right: 15%;
+  animation: silver-spot-2 15s ease-in-out infinite reverse;
+}
+
+.silver-spot-3 {
+  width: 200px;
+  height: 200px;
+  top: 40%;
+  left: 60%;
+  animation: silver-spot-3 10s ease-in-out infinite;
+}
+
+.silver-spot-4 {
+  width: 180px;
+  height: 180px;
+  bottom: 20%;
+  left: 20%;
+  animation: silver-spot-2 18s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(229, 231, 235, 0.5) 0%, rgba(156, 163, 175, 0.3) 100%);
+}
+
+.silver-spot-5 {
+  width: 220px;
+  height: 220px;
+  top: 10%;
+  right: 30%;
+  animation: silver-spot-1 14s ease-in-out infinite reverse;
+  background: radial-gradient(circle, rgba(209, 213, 219, 0.6) 0%, rgba(107, 114, 128, 0.3) 100%);
+}
+
+@keyframes ripple-effect {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(300);
+    opacity: 0;
+  }
+}
+
+.cart-bounce {
+  animation: cart-bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes cart-bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}

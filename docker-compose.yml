@@ -1,0 +1,89 @@
+# ===========================================
+# OpenStore - Open Source E-commerce Platform
+# Docker Compose Configuration
+# ===========================================
+
+version: '3.8'
+
+services:
+  # ===========================================
+  # PostgreSQL Database
+  # ===========================================
+  db:
+    image: postgres:16-alpine
+    container_name: openstore-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-openstore}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-openstore123}
+      POSTGRES_DB: ${POSTGRES_DB:-openstore}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-openstore} -d ${POSTGRES_DB:-openstore}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===========================================
+  # Next.js Application
+  # ===========================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openstore-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Database
+      DATABASE_URL: postgresql://${POSTGRES_USER:-openstore}:${POSTGRES_PASSWORD:-openstore123}@db:5432/${POSTGRES_DB:-openstore}
+      
+      # Authentication
+      JWT_SECRET: ${JWT_SECRET:-change-this-to-a-secure-random-string-at-least-32-chars}
+      
+      # Payment Gateway
+      DEFAULT_PAYMENT_GATEWAY: ${DEFAULT_PAYMENT_GATEWAY:-greenpag}
+      GREENPAG_API_URL: ${GREENPAG_API_URL:-https://greenpag.com/api/v1}
+      GREENPAG_PUBLIC_KEY: ${GREENPAG_PUBLIC_KEY:-}
+      GREENPAG_SECRET_KEY: ${GREENPAG_SECRET_KEY:-}
+      
+      # Site Configuration
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+      
+      # Environment
+      NODE_ENV: ${NODE_ENV:-production}
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ===========================================
+  # Adminer - Database Management (Development)
+  # ===========================================
+  adminer:
+    image: adminer:latest
+    container_name: openstore-adminer
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${ADMINER_PORT:-8080}:8080"
+    profiles:
+      - dev
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  default:
+    name: openstore-network

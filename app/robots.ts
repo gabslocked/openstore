@@ -1,0 +1,21 @@
+import { MetadataRoute } from 'next'
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ezpods.vercel.app'
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/admin/', '/api/', '/account/'],
+      },
+      {
+        userAgent: 'Googlebot',
+        allow: '/',
+        disallow: ['/admin/', '/api/', '/account/'],
+      },
+    ],
+    sitemap: `${siteUrl}/sitemap.xml`,
+  }
+}
