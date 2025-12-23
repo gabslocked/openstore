@@ -1,109 +1,105 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useStoreConfig } from "@/components/store-settings-provider"
+import { motion } from "framer-motion"
+import { Store } from "lucide-react"
 
 export default function VideoBanner() {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [videoEnded, setVideoEnded] = useState(false)
-  const [showText, setShowText] = useState(false)
-  const [videoProgress, setVideoProgress] = useState(0)
+  const { settings, isLoading } = useStoreConfig()
 
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="relative w-full h-[200px] sm:h-[280px] md:h-[350px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 animate-pulse" />
+    )
+  }
 
-    // Set playback rate to 90% (10% slower)
-    video.playbackRate = 0.9
+  // Check if user has configured a hero
+  const hasConfiguredHero = settings?.heroType && settings.heroType !== 'none' && 
+    ((settings.heroType === 'image' && settings.heroImageUrl) || 
+     (settings.heroType === 'video' && settings.heroVideoUrl))
 
-    const handleTimeUpdate = () => {
-      const progress = video.currentTime / video.duration
-      setVideoProgress(progress)
-      
-      // Show text at 90% of video (10% from end) - more delay
-      if (progress >= 0.90 && !showText) {
-        setShowText(true)
-      }
-    }
+  // If user configured a hero, show it
+  if (hasConfiguredHero) {
+    return (
+      <div className="relative w-full h-[200px] sm:h-[280px] md:h-[350px] overflow-hidden">
+        {settings.heroType === 'image' && settings.heroImageUrl && (
+          <img
+            src={settings.heroImageUrl}
+            alt={settings.heroTitle || 'Banner'}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
+        
+        {settings.heroType === 'video' && settings.heroVideoUrl && (
+          <video
+            src={settings.heroVideoUrl}
+            className="absolute inset-0 w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        )}
 
-    const handleVideoEnd = () => {
-      setVideoEnded(true)
-    }
+        {/* Overlay with content */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col items-center justify-center text-center p-4">
+          {settings.heroTitle && (
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-2 md:mb-4 drop-shadow-lg">
+              {settings.heroTitle}
+            </h1>
+          )}
+          {settings.heroSubtitle && (
+            <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl drop-shadow-md">
+              {settings.heroSubtitle}
+            </p>
+          )}
+        </div>
+      </div>
+    )
+  }
 
-    video.addEventListener('timeupdate', handleTimeUpdate)
-    video.addEventListener('ended', handleVideoEnd)
-    
-    return () => {
-      video.removeEventListener('timeupdate', handleTimeUpdate)
-      video.removeEventListener('ended', handleVideoEnd)
-    }
-  }, [showText])
-
+  // Default placeholder hero with logo when user hasn't configured
   return (
-    <div className="relative w-full h-[250px] sm:h-[320px] md:h-[400px] overflow-hidden">
-      <video
-        ref={videoRef}
-        className={`absolute inset-0 w-full transition-all duration-[2000ms] ease-out ${
-          videoEnded ? 'blur-sm brightness-75' : ''
-        } object-cover sm:object-cover`}
-        autoPlay
-        muted
-        playsInline
-        style={{ 
-          height: '150%',
-          top: '-25%',
-          objectPosition: 'center center'
-        }}
-      >
-        <source src="https://dbh4s5ja0maaw.cloudfront.net/products/bc10000/1.mp4" type="video/mp4" />
-      </video>
-      
-      {/* Progressive darkening overlay based on video progress */}
+    <div className="relative w-full h-[200px] sm:h-[280px] md:h-[350px] overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      {/* Subtle pattern overlay */}
       <div 
-        className="absolute inset-0"
+        className="absolute inset-0 opacity-10"
         style={{
-          backgroundColor: `rgba(0, 0, 0, ${
-            videoProgress > 0.75 
-              ? 0.4 + (videoProgress - 0.75) * 0.4 // Start darkening from 75% (last 25%)
-              : 0.4
-          })`,
-          transition: 'background-color 100ms linear' // Linear transition, no easing
+          backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
         }}
       />
       
-      {/* Minimalist text content */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <AnimatePresence>
-          {showText && (
-            <motion.div 
-              className="text-center px-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ 
-                duration: 4.0, 
-                ease: "easeOut"
-              }}
-            >
-              <motion.h1 
-                className="text-2xl sm:text-3xl md:text-5xl font-black text-white mb-1 sm:mb-3 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)] tracking-tight leading-tight"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 4.0, ease: "easeOut" }}
-              >
-                Bem-vindo à nossa loja
-              </motion.h1>
-              
-              <motion.p 
-                className="text-base sm:text-lg md:text-xl text-gray-200 max-w-xl mx-auto drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)] px-2 font-medium tracking-wide leading-relaxed"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 4.0, ease: "easeOut" }}
-              >
-                Descubra nossa coleção exclusiva de produtos
-              </motion.p>
-            </motion.div>
+      {/* Content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center"
+        >
+          {/* Logo or placeholder */}
+          {settings?.logoUrl ? (
+            <img
+              src={settings.logoUrl}
+              alt={settings.storeName || 'Logo'}
+              className="h-16 sm:h-20 md:h-24 w-auto mb-4 drop-shadow-lg"
+            />
+          ) : (
+            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mb-4 shadow-xl">
+              <Store className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
+            </div>
           )}
-        </AnimatePresence>
+          
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+            {settings?.storeName || 'Bem-vindo'}
+          </h1>
+          
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-md">
+            {settings?.storeDescription || 'Explore nossa coleção de produtos'}
+          </p>
+        </motion.div>
       </div>
     </div>
   )
