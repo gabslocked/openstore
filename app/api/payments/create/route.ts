@@ -1,10 +1,68 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createPayment, isValidDocument, formatDocument } from '@/lib/greenpag'
 import { savePaymentStatus } from '@/lib/payment-store'
 import { createOrder } from '@/lib/orders'
+import { getPaymentGateway, hasPaymentGateway } from '@/lib/adapters/out/payment-gateways'
+
+// Document validation utilities
+function isValidDocument(document: string): boolean {
+  const cleaned = document.replace(/\D/g, '')
+  if (cleaned.length === 11) return isValidCPF(cleaned)
+  if (cleaned.length === 14) return isValidCNPJ(cleaned)
+  return false
+}
+
+function isValidCPF(cpf: string): boolean {
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false
+  let sum = 0
+  for (let i = 0; i < 9; i++) sum += parseInt(cpf[i]) * (10 - i)
+  let digit = (sum * 10) % 11
+  if (digit === 10) digit = 0
+  if (digit !== parseInt(cpf[9])) return false
+  sum = 0
+  for (let i = 0; i < 10; i++) sum += parseInt(cpf[i]) * (11 - i)
+  digit = (sum * 10) % 11
+  if (digit === 10) digit = 0
+  return digit === parseInt(cpf[10])
+}
+
+function isValidCNPJ(cnpj: string): boolean {
+  if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false
+  const weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+  const weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+  let sum = 0
+  for (let i = 0; i < 12; i++) sum += parseInt(cnpj[i]) * weights1[i]
+  let digit = sum % 11
+  digit = digit < 2 ? 0 : 11 - digit
+  if (digit !== parseInt(cnpj[12])) return false
+  sum = 0
+  for (let i = 0; i < 13; i++) sum += parseInt(cnpj[i]) * weights2[i]
+  digit = sum % 11
+  digit = digit < 2 ? 0 : 11 - digit
+  return digit === parseInt(cnpj[13])
+}
+
+function formatDocument(document: string): string {
+  return document.replace(/\D/g, '')
+}
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if payment gateway is configured
+    if (!hasPaymentGateway()) {
+      return NextResponse.json(
+        { error: 'Nenhum gateway de pagamento configurado. Configure em Admin → Integrações.' },
+        { status: 503 }
+      )
+    }
+
+    const gateway = getPaymentGateway()
+    if (!gateway) {
+      return NextResponse.json(
+        { error: 'Gateway de pagamento não disponível' },
+        { status: 503 }
+      )
+    }
+
     const body = await request.json()
     const { items, customer, shipping, utm } = body
 
@@ -49,18 +107,19 @@ export async function POST(request: NextRequest) {
     // Gera ID externo único
     const externalId = `order_${Date.now()}_${Math.random().toString(36).substring(7)}`
 
-    // URL do webhook (ajuste conforme seu domínio)
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://openstore.com'
+    // URL do webhook
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
     const callbackUrl = `${siteUrl}/api/payments/webhook`
 
-    console.log('=== CRIANDO PAGAMENTO GREENPAG ===')
+    console.log('=== CRIANDO PAGAMENTO ===')
+    console.log('Gateway:', gateway.name)
     console.log('Total:', totalAmount)
     console.log('Cliente:', customer.name)
     console.log('Documento:', formatDocument(customer.document))
     console.log('Callback URL:', callbackUrl)
 
-    // Cria o pagamento no GreenPag
-    const payment = await createPayment({
+    // Cria o pagamento via gateway configurado
+    const payment = await gateway.createPayment({
       amount: totalAmount,
       description,
       customer: {
@@ -68,17 +127,16 @@ export async function POST(request: NextRequest) {
         document: formatDocument(customer.document),
         email: customer.email,
       },
-      external_id: externalId,
-      callback_url: callbackUrl,
-      utm: utm || undefined,
+      externalId,
+      callbackUrl,
     })
 
-    console.log('=== RESPOSTA GREENPAG ===')
+    console.log('=== RESPOSTA DO GATEWAY ===')
     console.log('Payment response:', JSON.stringify(payment, null, 2))
 
     // Salva o status inicial do pagamento
     savePaymentStatus({
-      transaction_id: payment.transaction_id,
+      transaction_id: payment.transactionId,
       status: 'pending',
       amount: payment.amount,
       external_id: externalId,
@@ -88,7 +146,7 @@ export async function POST(request: NextRequest) {
     try {
       const shippingCost = shipping?.cost || 0
       const orderId = await createOrder({
-        transaction_id: payment.transaction_id,
+        transaction_id: payment.transactionId,
         external_id: externalId,
         customer: {
           name: customer.name,
@@ -133,11 +191,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       payment: {
-        transaction_id: payment.transaction_id,
-        qr_code: payment.qr_code,
-        qr_code_base64: payment.qr_code_base64,
+        transaction_id: payment.transactionId,
+        qr_code: payment.pixData?.qrCode || '',
+        qr_code_base64: payment.pixData?.qrCodeBase64 || '',
         amount: payment.amount,
-        expires_at: payment.expires_at,
+        expires_at: payment.expiresAt?.toISOString(),
         external_id: externalId,
       },
     })

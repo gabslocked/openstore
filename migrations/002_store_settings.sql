@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS store_settings (
     enable_whatsapp_button BOOLEAN DEFAULT FALSE,
     
     -- Payment
-    default_payment_gateway VARCHAR(50) DEFAULT 'greenpag',
+    default_payment_gateway VARCHAR(50) DEFAULT '',
     currency VARCHAR(3) DEFAULT 'BRL',
     currency_symbol VARCHAR(5) DEFAULT 'R$',
     

@@ -37,14 +37,14 @@ export async function POST(
     let testResult: { success: boolean; error?: string; message?: string };
     
     switch (integration.provider) {
-      case 'greenpag':
-        testResult = await testGreenPag(credentials);
-        break;
       case 'stripe':
         testResult = await testStripe(credentials);
         break;
       case 'mercadopago':
         testResult = await testMercadoPago(credentials);
+        break;
+      case 'pagseguro':
+        testResult = await testPagSeguro(credentials);
         break;
       default:
         testResult = { success: false, error: 'Unknown provider' };
@@ -61,31 +61,6 @@ export async function POST(
       success: false,
       error: errorMessage,
     });
-  }
-}
-
-// Test GreenPag connection
-async function testGreenPag(credentials: Record<string, any>): Promise<{ success: boolean; error?: string; message?: string }> {
-  try {
-    const { publicKey, secretKey } = credentials;
-    
-    if (!publicKey || !secretKey) {
-      return { success: false, error: 'Missing API keys' };
-    }
-    
-    // Test API connection (you would call the actual GreenPag API here)
-    // For now, we just validate the format
-    if (!publicKey.startsWith('pk_') && !publicKey.startsWith('pub_')) {
-      return { success: false, error: 'Invalid public key format' };
-    }
-    
-    if (!secretKey.startsWith('sk_') && !secretKey.startsWith('sec_')) {
-      return { success: false, error: 'Invalid secret key format' };
-    }
-    
-    return { success: true, message: 'Connection successful' };
-  } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Connection failed' };
   }
 }
 
@@ -149,6 +124,31 @@ async function testMercadoPago(credentials: Record<string, any>): Promise<{ succ
     } else {
       return { success: false, error: 'API error' };
     }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Connection failed' };
+  }
+}
+
+// Test PagSeguro connection
+async function testPagSeguro(credentials: Record<string, any>): Promise<{ success: boolean; error?: string; message?: string }> {
+  try {
+    const { email, token } = credentials;
+    
+    if (!email || !token) {
+      return { success: false, error: 'Missing email or token' };
+    }
+    
+    // Validate email format
+    if (!email.includes('@')) {
+      return { success: false, error: 'Invalid email format' };
+    }
+    
+    // PagSeguro tokens are typically 32 characters
+    if (token.length < 20) {
+      return { success: false, error: 'Invalid token format' };
+    }
+    
+    return { success: true, message: 'Credentials validated' };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Connection failed' };
   }

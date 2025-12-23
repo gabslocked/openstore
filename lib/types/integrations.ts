@@ -1,11 +1,12 @@
 /**
  * Integration Types
  * Defines types for payment gateways and other integrations
+ * All payment gateways are configured via Admin UI
  */
 
 export type IntegrationType = 'payment_gateway' | 'webhook' | 'shipping' | 'analytics';
 
-export type PaymentGatewayProvider = 'greenpag' | 'stripe' | 'mercadopago' | 'pagseguro';
+export type PaymentGatewayProvider = 'stripe' | 'mercadopago' | 'pagseguro';
 
 export type WebhookProvider = 'n8n' | 'zapier' | 'custom';
 
@@ -25,12 +26,6 @@ export interface Integration {
 }
 
 // Gateway-specific configuration interfaces
-export interface GreenPagConfig {
-  publicKey: string;
-  secretKey: string;
-  webhookSecret?: string;
-}
-
 export interface StripeConfig {
   publicKey: string;
   secretKey: string;
@@ -42,6 +37,11 @@ export interface MercadoPagoConfig {
   publicKey: string;
 }
 
+export interface PagSeguroConfig {
+  email: string;
+  token: string;
+}
+
 export interface WebhookConfig {
   url: string;
   secret?: string;
@@ -49,7 +49,7 @@ export interface WebhookConfig {
 }
 
 // Union type for all gateway configs
-export type PaymentGatewayConfig = GreenPagConfig | StripeConfig | MercadoPagoConfig;
+export type PaymentGatewayConfig = StripeConfig | MercadoPagoConfig | PagSeguroConfig;
 
 // Gateway metadata for UI
 export interface GatewayInfo {
@@ -74,40 +74,6 @@ export interface GatewayField {
 
 // Available payment gateways with their configuration
 export const PAYMENT_GATEWAYS: GatewayInfo[] = [
-  {
-    provider: 'greenpag',
-    name: 'GreenPag',
-    description: 'Pagamentos PIX para o Brasil',
-    logo: '🟢',
-    supports: ['PIX'],
-    docsUrl: 'https://docs.greenpag.com.br',
-    fields: [
-      {
-        key: 'publicKey',
-        label: 'Chave Pública',
-        type: 'text',
-        placeholder: 'pk_...',
-        required: true,
-        helpText: 'Encontre em Dashboard > API Keys',
-      },
-      {
-        key: 'secretKey',
-        label: 'Chave Secreta',
-        type: 'password',
-        placeholder: 'sk_...',
-        required: true,
-        helpText: 'Nunca compartilhe esta chave',
-      },
-      {
-        key: 'webhookSecret',
-        label: 'Webhook Secret',
-        type: 'password',
-        placeholder: 'whsec_...',
-        required: false,
-        helpText: 'Para validar webhooks recebidos',
-      },
-    ],
-  },
   {
     provider: 'stripe',
     name: 'Stripe',

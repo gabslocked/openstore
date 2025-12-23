@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS integrations (
     
     -- Integration type and provider
     type VARCHAR(50) NOT NULL, -- 'payment_gateway', 'webhook', 'shipping', 'analytics'
-    provider VARCHAR(50) NOT NULL, -- 'greenpag', 'stripe', 'mercadopago', 'n8n', etc.
+    provider VARCHAR(50) NOT NULL, -- 'stripe', 'mercadopago', 'pagseguro', 'n8n', etc.
     name VARCHAR(100) NOT NULL, -- Display name
     
     -- Status
@@ -81,7 +81,7 @@ CREATE INDEX IF NOT EXISTS idx_webhook_logs_created ON webhook_logs(created_at);
 -- INSERT DEFAULT PAYMENT GATEWAYS (disabled)
 -- ===========================================
 INSERT INTO integrations (type, provider, name, enabled, config_public) VALUES
-    ('payment_gateway', 'greenpag', 'GreenPag', FALSE, '{"api_url": "https://api.greenpag.com.br/v1", "supports": ["pix"]}'),
     ('payment_gateway', 'stripe', 'Stripe', FALSE, '{"api_url": "https://api.stripe.com/v1", "supports": ["card", "pix", "boleto"]}'),
-    ('payment_gateway', 'mercadopago', 'MercadoPago', FALSE, '{"api_url": "https://api.mercadopago.com/v1", "supports": ["card", "pix", "boleto"]}')
+    ('payment_gateway', 'mercadopago', 'MercadoPago', FALSE, '{"api_url": "https://api.mercadopago.com/v1", "supports": ["card", "pix", "boleto"]}'),
+    ('payment_gateway', 'pagseguro', 'PagSeguro', FALSE, '{"api_url": "https://ws.pagseguro.uol.com.br/v2", "supports": ["card", "pix", "boleto"]}')
 ON CONFLICT (type, provider) DO NOTHING;

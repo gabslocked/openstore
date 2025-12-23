@@ -1,59 +1,53 @@
 import type { PaymentGatewayPort } from '@/lib/core/ports/out/payment-gateway.port';
-import { GreenPagAdapter, type GreenPagConfig } from './greenpag.adapter';
 
 /**
  * Supported payment gateway types
+ * Payment gateways are configured via Admin UI, not hardcoded
  */
-export type GatewayType = 'greenpag' | 'stripe' | 'mercadopago' | 'pagseguro';
+export type GatewayType = 'stripe' | 'mercadopago' | 'pagseguro';
 
 /**
  * Gateway factory registry
+ * Gateways are registered dynamically based on configuration
  */
 const gatewayRegistry = new Map<GatewayType, () => PaymentGatewayPort>();
 
 /**
- * Register GreenPag adapter
- */
-gatewayRegistry.set('greenpag', () => {
-  const config: GreenPagConfig = {
-    apiUrl: process.env.GREENPAG_API_URL || 'https://greenpag.com/api/v1',
-    publicKey: process.env.GREENPAG_PUBLIC_KEY || '',
-    secretKey: process.env.GREENPAG_SECRET_KEY || '',
-  };
-
-  if (!config.publicKey || !config.secretKey) {
-    throw new Error('GreenPag: GREENPAG_PUBLIC_KEY and GREENPAG_SECRET_KEY are required');
-  }
-
-  return new GreenPagAdapter(config);
-});
-
-/**
  * Create a payment gateway instance
  * @param type Gateway type (defaults to environment configuration)
- * @returns Payment gateway instance
+ * @returns Payment gateway instance or null if not configured
  */
-export function createPaymentGateway(type?: GatewayType): PaymentGatewayPort {
+export function createPaymentGateway(type?: GatewayType): PaymentGatewayPort | null {
   const gatewayType = type || getDefaultGateway();
+
+  if (!gatewayType) {
+    return null;
+  }
 
   const factory = gatewayRegistry.get(gatewayType);
 
   if (!factory) {
-    throw new Error(
+    console.warn(
       `Payment gateway '${gatewayType}' is not registered. ` +
-      `Available gateways: ${Array.from(gatewayRegistry.keys()).join(', ')}`
+      `Available gateways: ${Array.from(gatewayRegistry.keys()).join(', ') || 'none'}`
     );
+    return null;
   }
 
-  return factory();
+  try {
+    return factory();
+  } catch (error) {
+    console.error(`Failed to create payment gateway '${gatewayType}':`, error);
+    return null;
+  }
 }
 
 /**
  * Get the default payment gateway from environment
  */
-function getDefaultGateway(): GatewayType {
+function getDefaultGateway(): GatewayType | null {
   const gateway = process.env.DEFAULT_PAYMENT_GATEWAY as GatewayType;
-  return gateway || 'greenpag';
+  return gateway || null;
 }
 
 /**
@@ -63,13 +57,20 @@ let defaultGatewayInstance: PaymentGatewayPort | null = null;
 
 /**
  * Get the default payment gateway (singleton)
- * @returns Default payment gateway instance
+ * @returns Default payment gateway instance or null if not configured
  */
-export function getPaymentGateway(): PaymentGatewayPort {
+export function getPaymentGateway(): PaymentGatewayPort | null {
   if (!defaultGatewayInstance) {
     defaultGatewayInstance = createPaymentGateway();
   }
   return defaultGatewayInstance;
+}
+
+/**
+ * Check if a payment gateway is configured
+ */
+export function hasPaymentGateway(): boolean {
+  return getPaymentGateway() !== null;
 }
 
 /**
@@ -98,6 +99,12 @@ export function registerGateway(
   gatewayRegistry.set(type, factory);
 }
 
-// Re-export types and adapters
-export { GreenPagAdapter, type GreenPagConfig } from './greenpag.adapter';
+/**
+ * Get list of available gateway types
+ */
+export function getAvailableGateways(): GatewayType[] {
+  return Array.from(gatewayRegistry.keys());
+}
+
+// Re-export types
 export type { PaymentGatewayPort } from '@/lib/core/ports/out/payment-gateway.port';

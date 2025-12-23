@@ -3,7 +3,7 @@ import { z } from 'zod';
 /**
  * Environment variables schema
  * All required environment variables are validated at startup
- * No fallback values for sensitive credentials
+ * Payment gateway credentials are optional - configured via Admin UI
  */
 const envSchema = z.object({
   // Database
@@ -12,24 +12,24 @@ const envSchema = z.object({
   // Authentication
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters for security'),
 
-  // Payment Gateway Selection
+  // Payment Gateway Selection (optional - configured via Admin UI)
   DEFAULT_PAYMENT_GATEWAY: z
-    .enum(['greenpag', 'stripe', 'mercadopago', 'pagseguro'])
-    .default('greenpag'),
+    .enum(['stripe', 'mercadopago', 'pagseguro', ''])
+    .optional()
+    .default(''),
 
-  // GreenPag Configuration
-  GREENPAG_API_URL: z.string().url().default('https://greenpag.com/api/v1'),
-  GREENPAG_PUBLIC_KEY: z.string().min(1, 'GREENPAG_PUBLIC_KEY is required when using GreenPag'),
-  GREENPAG_SECRET_KEY: z.string().min(1, 'GREENPAG_SECRET_KEY is required when using GreenPag'),
-
-  // Stripe Configuration (optional - for future use)
+  // Stripe Configuration (optional)
   STRIPE_PUBLIC_KEY: z.string().optional(),
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
 
-  // MercadoPago Configuration (optional - for future use)
+  // MercadoPago Configuration (optional)
   MERCADOPAGO_ACCESS_TOKEN: z.string().optional(),
   MERCADOPAGO_PUBLIC_KEY: z.string().optional(),
+
+  // PagSeguro Configuration (optional)
+  PAGSEGURO_EMAIL: z.string().optional(),
+  PAGSEGURO_TOKEN: z.string().optional(),
 
   // Site Configuration
   NEXT_PUBLIC_SITE_URL: z.string().url().default('http://localhost:3000'),
@@ -86,15 +86,6 @@ export const env = {
     };
   },
 
-  get greenpag() {
-    const config = getEnvConfig();
-    return {
-      apiUrl: config.GREENPAG_API_URL,
-      publicKey: config.GREENPAG_PUBLIC_KEY,
-      secretKey: config.GREENPAG_SECRET_KEY,
-    };
-  },
-
   get stripe() {
     const config = getEnvConfig();
     return {
@@ -112,8 +103,16 @@ export const env = {
     };
   },
 
+  get pagseguro() {
+    const config = getEnvConfig();
+    return {
+      email: config.PAGSEGURO_EMAIL,
+      token: config.PAGSEGURO_TOKEN,
+    };
+  },
+
   get defaultPaymentGateway() {
-    return getEnvConfig().DEFAULT_PAYMENT_GATEWAY;
+    return getEnvConfig().DEFAULT_PAYMENT_GATEWAY || '';
   },
 
   get siteUrl() {

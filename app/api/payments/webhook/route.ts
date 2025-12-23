@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateWebhookSignature, parseWebhook } from '@/lib/greenpag'
 import { savePaymentStatus } from '@/lib/payment-store'
 import { updateOrderStatus, getOrderByTransactionId } from '@/lib/orders'
 import { sendWhatsAppNotification, createOrderPaidNotification } from '@/lib/webhooks/n8n'
+import { getPaymentGateway } from '@/lib/adapters/out/payment-gateways'
 
 // Configuração para desabilitar o body parser e ler o raw body
 export const runtime = 'nodejs'
@@ -10,109 +10,102 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   try {
+    const gateway = getPaymentGateway()
+    
     // Lê o corpo da requisição como texto
     const payload = await request.text()
     
-    // Pega a assinatura do header
-    const signature = request.headers.get('X-Signature') || request.headers.get('x-signature')
+    // Pega a assinatura do header (diferentes gateways usam diferentes headers)
+    const signature = request.headers.get('X-Signature') || 
+                      request.headers.get('x-signature') ||
+                      request.headers.get('Stripe-Signature') ||
+                      request.headers.get('x-webhook-signature') || ''
 
-    if (!signature) {
-      console.error('Webhook sem assinatura')
+    // Se não há gateway configurado, apenas loga e retorna OK
+    if (!gateway) {
+      console.warn('Webhook recebido mas nenhum gateway configurado')
+      return NextResponse.json({ success: true, warning: 'No gateway configured' }, { status: 200 })
+    }
+
+    // Valida o webhook usando o gateway configurado
+    const validation = gateway.validateWebhook(payload, signature)
+
+    if (!validation.isValid) {
+      console.error('Webhook inválido:', validation.error)
       return NextResponse.json(
-        { error: 'Assinatura não fornecida' },
+        { error: validation.error || 'Webhook inválido' },
         { status: 401 }
       )
     }
 
-    // Valida a assinatura do webhook
-    const isValid = validateWebhookSignature(payload, signature)
-
-    if (!isValid) {
-      console.error('Assinatura inválida do webhook')
-      return NextResponse.json(
-        { error: 'Assinatura inválida' },
-        { status: 401 }
-      )
-    }
-
-    // Parse do payload
-    const webhookData = parseWebhook(payload)
+    const webhookData = validation.payload!
 
     console.log('Webhook recebido:', {
       event: webhookData.event,
-      transaction_id: webhookData.transaction_id,
+      transactionId: webhookData.transactionId,
       status: webhookData.status,
       amount: webhookData.amount,
     })
 
-    // Processa o evento
-    switch (webhookData.event) {
-      case 'payment.received':
-        console.log(`Pagamento recebido: ${webhookData.transaction_id}`)
-        savePaymentStatus({
-          transaction_id: webhookData.transaction_id,
-          status: 'pending',
-          amount: webhookData.amount,
-          external_id: webhookData.external_id,
-        })
-        break
-
-      case 'payment.confirmed':
-        console.log(`Pagamento confirmado: ${webhookData.transaction_id}`)
-        savePaymentStatus({
-          transaction_id: webhookData.transaction_id,
-          status: 'paid',
-          amount: webhookData.amount,
-          paid_at: webhookData.paid_at,
-          external_id: webhookData.external_id,
-        })
+    // Processa baseado no status do pagamento
+    const status = webhookData.status
+    
+    if (status === 'pending' || status === 'processing') {
+      console.log(`Pagamento recebido: ${webhookData.transactionId}`)
+      savePaymentStatus({
+        transaction_id: webhookData.transactionId,
+        status: 'pending',
+        amount: webhookData.amount,
+        external_id: webhookData.externalId,
+      })
+    } else if (status === 'paid') {
+      console.log(`Pagamento confirmado: ${webhookData.transactionId}`)
+      savePaymentStatus({
+        transaction_id: webhookData.transactionId,
+        status: 'paid',
+        amount: webhookData.amount,
+        paid_at: webhookData.paidAt?.toISOString(),
+        external_id: webhookData.externalId,
+      })
+      
+      // Atualiza status do pedido no banco de dados
+      try {
+        await updateOrderStatus(webhookData.transactionId, 'paid')
+        console.log(`✅ Pedido marcado como pago: ${webhookData.transactionId}`)
         
-        // Atualiza status do pedido no banco de dados
-        try {
-          await updateOrderStatus(webhookData.transaction_id, 'paid')
-          console.log(`✅ Pedido marcado como pago: ${webhookData.transaction_id}`)
-          
-          // Envia notificação WhatsApp via n8n
-          const order = await getOrderByTransactionId(webhookData.transaction_id)
-          if (order && order.customer_phone) {
-            sendWhatsAppNotification(createOrderPaidNotification(order))
-              .catch(err => console.error('Erro ao enviar notificação WhatsApp:', err))
-          }
-        } catch (error) {
-          console.error('Erro ao atualizar status do pedido:', error)
-          // Não falha o webhook se o pedido não existir ainda
+        // Envia notificação WhatsApp via n8n
+        const order = await getOrderByTransactionId(webhookData.transactionId)
+        if (order && order.customer_phone) {
+          sendWhatsAppNotification(createOrderPaidNotification(order))
+            .catch(err => console.error('Erro ao enviar notificação WhatsApp:', err))
         }
-        break
-
-      case 'payment.failed':
-        console.log(`Pagamento falhou: ${webhookData.transaction_id}`)
-        savePaymentStatus({
-          transaction_id: webhookData.transaction_id,
-          status: 'failed',
-          amount: webhookData.amount,
-          external_id: webhookData.external_id,
-        })
-        
-        // Atualiza status do pedido
-        try {
-          await updateOrderStatus(webhookData.transaction_id, 'failed')
-        } catch (error) {
-          console.error('Erro ao atualizar status do pedido:', error)
-        }
-        break
-
-      case 'payment.expired':
-        console.log(`Pagamento expirou: ${webhookData.transaction_id}`)
-        savePaymentStatus({
-          transaction_id: webhookData.transaction_id,
-          status: 'expired',
-          amount: webhookData.amount,
-          external_id: webhookData.external_id,
-        })
-        break
-
-      default:
-        console.log(`Evento desconhecido: ${webhookData.event}`)
+      } catch (error) {
+        console.error('Erro ao atualizar status do pedido:', error)
+      }
+    } else if (status === 'failed' || status === 'cancelled') {
+      console.log(`Pagamento falhou: ${webhookData.transactionId}`)
+      savePaymentStatus({
+        transaction_id: webhookData.transactionId,
+        status: 'failed',
+        amount: webhookData.amount,
+        external_id: webhookData.externalId,
+      })
+      
+      try {
+        await updateOrderStatus(webhookData.transactionId, 'failed')
+      } catch (error) {
+        console.error('Erro ao atualizar status do pedido:', error)
+      }
+    } else if (status === 'expired') {
+      console.log(`Pagamento expirou: ${webhookData.transactionId}`)
+      savePaymentStatus({
+        transaction_id: webhookData.transactionId,
+        status: 'expired',
+        amount: webhookData.amount,
+        external_id: webhookData.externalId,
+      })
+    } else {
+      console.log(`Status desconhecido: ${status}`)
     }
 
     // Retorna 200 OK para confirmar recebimento
@@ -120,7 +113,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Erro ao processar webhook:', error)
     
-    // Retorna 500 para que o GreenPag tente reenviar
+    // Retorna 500 para que o gateway tente reenviar
     return NextResponse.json(
       { 
         error: 'Erro ao processar webhook',

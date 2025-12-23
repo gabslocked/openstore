@@ -28,7 +28,7 @@ OpenStore is a **production-ready, fully customizable e-commerce platform** buil
 | Feature | Description |
 |---------|-------------|
 | 🎨 **Visual Customization** | Configure colors, logo, hero banner/video via admin interface |
-| 💳 **Multiple Payment Gateways** | GreenPag, Stripe, MercadoPago - easily add more |
+| 💳 **Multiple Payment Gateways** | Stripe, MercadoPago, PagSeguro - easily add more |
 | 🏗️ **Hexagonal Architecture** | Clean, maintainable, and testable code |
 | 🚀 **Onboarding Wizard** | Beautiful step-by-step initial setup |
 | 📱 **Responsive Design** | Works perfectly on mobile and desktop |
@@ -88,7 +88,7 @@ openstore/
 
 | Gateway | Methods | Status |
 |---------|---------|--------|
-| **GreenPag** | PIX | ✅ Ready |
+| **PagSeguro** | Card, PIX, Boleto | ✅ Ready |
 | **Stripe** | Card, PIX, Boleto | ✅ Ready |
 | **MercadoPago** | Card, PIX, Boleto | ✅ Ready |
 
@@ -108,7 +108,7 @@ OpenStore é uma **plataforma de e-commerce pronta para produção e totalmente 
 | Funcionalidade | Descrição |
 |----------------|-----------|
 | 🎨 **Customização Visual** | Configure cores, logo, banner/vídeo via interface admin |
-| 💳 **Múltiplos Gateways** | GreenPag, Stripe, MercadoPago - adicione mais facilmente |
+| 💳 **Múltiplos Gateways** | Stripe, MercadoPago, PagSeguro - adicione mais facilmente |
 | 🏗️ **Arquitetura Hexagonal** | Código limpo, manutenível e testável |
 | 🚀 **Wizard de Onboarding** | Setup inicial bonito passo a passo |
 | 📱 **Design Responsivo** | Funciona perfeitamente em mobile e desktop |
@@ -156,9 +156,9 @@ Isso inicia PostgreSQL (porta 5432), a aplicação Next.js (porta 3000) e Admine
 
 #### Gateways de Pagamento
 Configure via Admin → Integrações com interface visual (sem código!):
-- **GreenPag**: Pagamentos PIX para o Brasil
 - **Stripe**: Cartões, PIX, Boleto
 - **MercadoPago**: Cartões, PIX, Boleto
+- **PagSeguro**: Cartões, PIX, Boleto
 
 #### Painel Admin
 - Gerenciamento de produtos e categorias
@@ -180,7 +180,7 @@ OpenStore es una **plataforma de e-commerce lista para producción y totalmente 
 | Característica | Descripción |
 |----------------|-------------|
 | 🎨 **Personalización Visual** | Configura colores, logo, banner/video vía interfaz admin |
-| 💳 **Múltiples Pasarelas** | GreenPag, Stripe, MercadoPago - añade más fácilmente |
+| 💳 **Múltiples Pasarelas** | Stripe, MercadoPago, PagSeguro - añade más fácilmente |
 | 🏗️ **Arquitectura Hexagonal** | Código limpio, mantenible y testeable |
 | 🚀 **Wizard de Onboarding** | Configuración inicial paso a paso |
 | 📱 **Diseño Responsivo** | Funciona perfectamente en móvil y escritorio |
