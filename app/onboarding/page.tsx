@@ -1,12 +1,41 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Store, Palette, Image, CreditCard, Check, ArrowRight, ArrowLeft, 
   Sparkles, Loader2 
 } from 'lucide-react';
+
+// Convert hex color to HSL format for CSS variables
+function hexToHsl(hex: string): string {
+  if (!hex || !hex.startsWith('#')) return '160 84% 39%'; // Default emerald
+  
+  hex = hex.replace('#', '');
+  if (hex.length !== 6) return '160 84% 39%';
+  
+  const r = parseInt(hex.substring(0, 2), 16) / 255;
+  const g = parseInt(hex.substring(2, 4), 16) / 255;
+  const b = parseInt(hex.substring(4, 6), 16) / 255;
+  
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0, s = 0;
+  const l = (max + min) / 2;
+  
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  
+  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+}
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -30,6 +59,31 @@ export default function OnboardingPage() {
   const [settings, setSettings] = useState<Partial<StoreSettings>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+
+  // Get the current primary color for dynamic styling
+  const primaryColor = settings.primaryColor || '#10b981';
+  const primaryHsl = useMemo(() => hexToHsl(primaryColor), [primaryColor]);
+
+  // Apply CSS variables in real-time when colors change
+  useEffect(() => {
+    const root = document.documentElement;
+    
+    if (settings.primaryColor) {
+      root.style.setProperty('--primary', hexToHsl(settings.primaryColor));
+      root.style.setProperty('--accent', hexToHsl(settings.primaryColor));
+      root.style.setProperty('--ring', hexToHsl(settings.primaryColor));
+    }
+    if (settings.accentColor) {
+      root.style.setProperty('--accent', hexToHsl(settings.accentColor));
+    }
+    
+    // Cleanup: reset to defaults when leaving onboarding
+    return () => {
+      root.style.setProperty('--primary', '160 84% 39%');
+      root.style.setProperty('--accent', '160 84% 39%');
+      root.style.setProperty('--ring', '160 84% 39%');
+    };
+  }, [settings.primaryColor, settings.accentColor]);
 
   useEffect(() => {
     fetchSettings();
@@ -97,7 +151,7 @@ export default function OnboardingPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: primaryColor }} />
       </div>
     );
   }
@@ -132,7 +186,10 @@ export default function OnboardingPage() {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+              <div 
+                className="h-10 w-10 rounded-xl flex items-center justify-center"
+                style={{ background: `linear-gradient(to bottom right, ${primaryColor}, ${settings.secondaryColor || primaryColor})` }}
+              >
                 <StepIcon className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -165,15 +222,21 @@ export default function OnboardingPage() {
                 key={step.id}
                 onClick={() => index <= currentStep && setCurrentStep(index)}
                 disabled={index > currentStep}
-                className={`
-                  flex items-center justify-center h-10 w-10 rounded-full transition-all
-                  ${isActive 
-                    ? 'bg-emerald-500 text-white scale-110' 
+                className="flex items-center justify-center h-10 w-10 rounded-full transition-all"
+                style={{
+                  backgroundColor: isActive 
+                    ? primaryColor 
                     : isCompleted 
-                      ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30' 
-                      : 'bg-zinc-800 text-zinc-500'
-                  }
-                `}
+                      ? `${primaryColor}33` 
+                      : undefined,
+                  color: isActive 
+                    ? 'white' 
+                    : isCompleted 
+                      ? primaryColor 
+                      : undefined,
+                  transform: isActive ? 'scale(1.1)' : undefined,
+                }}
+                {...(!isActive && !isCompleted && { className: 'flex items-center justify-center h-10 w-10 rounded-full transition-all bg-zinc-800 text-zinc-500' })}
               >
                 {isCompleted ? (
                   <Check className="h-4 w-4" />
@@ -216,7 +279,8 @@ export default function OnboardingPage() {
             <Button
               onClick={saveAndContinue}
               disabled={isSaving}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="text-white"
+              style={{ backgroundColor: primaryColor }}
             >
               {isSaving ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

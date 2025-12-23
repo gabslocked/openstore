@@ -115,17 +115,17 @@ export const DEFAULT_STORE_SETTINGS: Omit<StoreSettings, 'id' | 'createdAt' | 'u
   // Hero
   heroType: 'none',
   
-  // Theme
+  // Theme - Emerald green style (matching onboarding)
   primaryColor: '#10b981',
-  secondaryColor: '#3b82f6',
-  accentColor: '#f59e0b',
+  secondaryColor: '#059669',
+  accentColor: '#34d399',
   backgroundColor: '#000000',
   foregroundColor: '#ffffff',
   mutedColor: '#71717a',
   borderColor: '#27272a',
   themeMode: 'dark',
   borderRadius: '0.5rem',
-  fontFamily: 'Montserrat',
+  fontFamily: 'Poppins',
   
   // Features
   enableWishlist: true,
@@ -134,7 +134,7 @@ export const DEFAULT_STORE_SETTINGS: Omit<StoreSettings, 'id' | 'createdAt' | 'u
   enableWhatsappButton: false,
   
   // Payment
-  defaultPaymentGateway: 'greenpag',
+  defaultPaymentGateway: '',
   currency: 'BRL',
   currencySymbol: 'R$',
   

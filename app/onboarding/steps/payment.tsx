@@ -23,7 +23,7 @@ const CURRENCIES = [
 
 export function PaymentStep({ settings, updateSettings }: PaymentStepProps) {
   const [integrations, setIntegrations] = useState<Integration[]>([]);
-  const [selectedGateway, setSelectedGateway] = useState<string>('greenpag');
+  const [selectedGateway, setSelectedGateway] = useState<string>('');
   const [credentials, setCredentials] = useState<Record<string, string>>({});
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
   const [testing, setTesting] = useState(false);
