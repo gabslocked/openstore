@@ -42,8 +42,8 @@ export function AdminMobileMenu() {
       <div className="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-black via-gray-900 to-black border-b border-gray-600/30 flex items-center justify-between px-4 z-50 shadow-2xl">
         <Link href="/admin/dashboard">
           <Image
-            src="/ezpods-logo.png"
-            alt="EzPods Logo"
+            src="/placeholder-logo.png"
+            alt="Logo"
             width={120}
             height={50}
             className="w-auto h-10"

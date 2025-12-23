@@ -41,7 +41,7 @@ export default function SearchBar({ defaultValue = "" }: SearchBarProps) {
       <div className="relative flex-grow">
         <Input
           type="text"
-          placeholder="O que deseja fumar hoje?"
+          placeholder="O que você procura?"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}

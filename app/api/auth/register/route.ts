@@ -4,7 +4,7 @@ import { Pool } from 'pg'
 
 // Database connection
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/ezpods',
+  connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/openstore',
 })
 
 // Test database connection on startup

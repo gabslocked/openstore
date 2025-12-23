@@ -7,13 +7,13 @@
  *   node scripts/set-admin.js <email>
  * 
  * Exemplo:
- *   node scripts/set-admin.js admin@ezpods.com
+ *   node scripts/set-admin.js admin@example.com
  */
 
 const { Pool } = require('pg')
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/ezpods'
+  connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/openstore'
 })
 
 async function setAdmin(email) {
@@ -62,7 +62,7 @@ const email = process.argv[2]
 
 if (!email) {
   console.error('❌ Uso: node scripts/set-admin.js <email>')
-  console.error('   Exemplo: node scripts/set-admin.js admin@ezpods.com')
+  console.error('   Exemplo: node scripts/set-admin.js admin@example.com')
   process.exit(1)
 }
 

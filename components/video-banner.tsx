@@ -90,7 +90,7 @@ export default function VideoBanner() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 4.0, ease: "easeOut" }}
               >
-                Bem-vindo ao EzPods
+                Bem-vindo à nossa loja
               </motion.h1>
               
               <motion.p 
@@ -99,7 +99,7 @@ export default function VideoBanner() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 4.0, ease: "easeOut" }}
               >
-                Descubra nossa coleção exclusiva de pods premium
+                Descubra nossa coleção exclusiva de produtos
               </motion.p>
             </motion.div>
           )}

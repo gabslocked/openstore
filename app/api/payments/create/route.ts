@@ -44,13 +44,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Gera descrição do pedido
-    const description = `Pedido EzPods - ${items.length} ${items.length === 1 ? 'item' : 'itens'}`
+    const description = `Pedido - ${items.length} ${items.length === 1 ? 'item' : 'itens'}`
 
     // Gera ID externo único
-    const externalId = `ezpods_${Date.now()}_${Math.random().toString(36).substring(7)}`
+    const externalId = `order_${Date.now()}_${Math.random().toString(36).substring(7)}`
 
     // URL do webhook (ajuste conforme seu domínio)
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ezpods.vercel.app'
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://openstore.com'
     const callbackUrl = `${siteUrl}/api/payments/webhook`
 
     console.log('=== CRIANDO PAGAMENTO GREENPAG ===')

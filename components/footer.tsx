@@ -7,8 +7,8 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0 flex flex-col items-center md:items-start">
             <img
-              src="/ezpods-logo.png"
-              alt="EzPods Logo"
+              src="/placeholder-logo.png"
+              alt="Logo"
               className="w-auto filter brightness-0 invert mb-3 h-16 py-0"
             />
             <p className="text-white/80 text-sm mt-2 max-w-xs">
@@ -17,7 +17,7 @@ export default function Footer() {
           </div>
 
           <div className="text-center md:text-right">
-            <p className="text-white/90 text-sm">© {new Date().getFullYear()} EZPods. Todos os direitos reservados.</p>
+            <p className="text-white/90 text-sm">© {new Date().getFullYear()} Todos os direitos reservados.</p>
             <p className="text-white/90 text-sm mt-1">Proibida a venda para menores de 18 anos.</p>
             <div className="mt-3 text-xs text-white/80">
               <Link href="/terms" className="hover:text-[#2017C2] transition-colors">

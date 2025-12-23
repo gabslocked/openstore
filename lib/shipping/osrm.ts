@@ -14,7 +14,7 @@ export async function calculateRoute(
 
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'EzPods-Delivery-App/1.0'
+        'User-Agent': 'OpenStore-Delivery-App/1.0'
       }
     })
 

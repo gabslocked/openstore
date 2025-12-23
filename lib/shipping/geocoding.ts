@@ -53,7 +53,7 @@ export async function geocodeCEP(cep: string): Promise<Coordinates> {
       `countrycodes=br`,
       {
         headers: {
-          'User-Agent': 'EzPods-Delivery-App/1.0'
+          'User-Agent': 'OpenStore-Delivery-App/1.0'
         }
       }
     )
@@ -74,7 +74,7 @@ export async function geocodeCEP(cep: string): Promise<Coordinates> {
         `limit=1`,
         {
           headers: {
-            'User-Agent': 'EzPods-Delivery-App/1.0'
+            'User-Agent': 'OpenStore-Delivery-App/1.0'
           }
         }
       )

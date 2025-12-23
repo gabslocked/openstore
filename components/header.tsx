@@ -51,8 +51,8 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="relative z-20 group">
             <img
-              src="/ezpods-logo.png"
-              alt="EzPods Logo"
+              src="/placeholder-logo.png"
+              alt="Logo"
               className="w-auto h-16 md:h-20 transition-all duration-300 group-hover:scale-105 group-hover:brightness-110 drop-shadow-lg"
             />
           </Link>

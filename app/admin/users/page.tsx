@@ -215,7 +215,7 @@ export default function AdminUsersPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {user.email !== 'admin@ezpods.com' && (
+                      {user.is_admin !== true && (
                         <Button
                           onClick={() => handleDeleteUser(user.id, user.name)}
                           variant="ghost"

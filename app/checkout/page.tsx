@@ -140,7 +140,7 @@ export default function CheckoutPage() {
             setStep('success')
             // Limpa AMBOS os carrinhos após confirmação do pagamento
             localStorage.removeItem('cart')
-            localStorage.removeItem('ezpods-cart')
+            localStorage.removeItem('openstore-cart')
             clearInterval(interval)
           }
         } catch (error) {

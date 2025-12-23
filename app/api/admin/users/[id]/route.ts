@@ -40,7 +40,7 @@ export async function DELETE(
         return NextResponse.json({ error: 'User not found' }, { status: 404 })
       }
 
-      if (userCheck.rows[0].email === 'admin@ezpods.com') {
+      if (userCheck.rows[0].is_admin === true) {
         return NextResponse.json({ error: 'Cannot delete admin user' }, { status: 403 })
       }
 

@@ -99,7 +99,7 @@ export default function AdminLoginPage() {
                 onChange={handleInputChange}
                 required
                 className="mt-1 block w-full px-3 py-2 bg-black/50 border border-gray-600/30 rounded-md text-white placeholder-gray-500 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
-                placeholder="admin@ezpods.com"
+                placeholder="admin@example.com"
               />
             </div>
 

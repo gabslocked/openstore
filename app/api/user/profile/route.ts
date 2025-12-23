@@ -3,7 +3,7 @@ import { Pool } from 'pg'
 import jwt from 'jsonwebtoken'
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/ezpods'
+  connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/openstore'
 })
 
 export async function GET(request: NextRequest) {

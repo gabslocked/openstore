@@ -38,8 +38,8 @@ export function AdminSidebar() {
       <div className="flex items-center justify-center py-6 border-b border-gray-600/30">
         <Link href="/admin/dashboard">
           <Image
-            src="/ezpods-logo.png"
-            alt="EzPods Logo"
+            src="/placeholder-logo.png"
+            alt="Logo"
             width={140}
             height={60}
             className="w-auto h-14 drop-shadow-lg"

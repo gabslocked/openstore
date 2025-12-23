@@ -11,6 +11,6 @@ CREATE INDEX IF NOT EXISTS idx_users_is_admin ON users(is_admin) WHERE is_admin 
 
 -- Update existing admin users (if any)
 -- You can manually set specific users as admin after running this migration
--- Example: UPDATE users SET is_admin = TRUE WHERE email = 'admin@ezpods.com';
+-- Example: UPDATE users SET is_admin = TRUE WHERE email = 'admin@example.com';
 
 COMMENT ON COLUMN users.is_admin IS 'Indicates if user has admin privileges';

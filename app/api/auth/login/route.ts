@@ -39,8 +39,8 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: false, error: "Credenciais inválidas" }, { status: 401 })
       }
 
-      // Check if this is the admin user
-      const isAdmin = user.email === 'admin@ezpods.com'
+      // Check if this is an admin user
+      const isAdmin = user.is_admin === true
 
       // Generate JWT token
       const token = jwt.sign(
